@@ -9,11 +9,11 @@ TinyOS wrapping code for other frameworks (e.g., Atmel Software Framework or Stm
 3 - create a Makefile.include in the root directory pointing your tinyos-main folder (check tinyos on github for instructions)
 
 4 - create a tinyos.sh bash script that includes the following code:
-
+'''
 #!/bin/bash
 TINYOS_ROOT_DIR_ADDITIONAL=your_contrib_path
 export TINYOS_ROOT_DIR_ADDITIONAL
-
+'''
 5 - run "source tinyos.sh" to set environment variables
 
 6 - go in your tinyos-main/apps/Blink directory and try to compile the SamR21 Xplained Pro board by typing: make samr21xpro
