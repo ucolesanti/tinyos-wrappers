@@ -1,0 +1,42 @@
+#-*-Makefile-*- vim:syntax=make
+PATH_AND_STARTUP_FILE = $(shell tos-sub-tosdir $(TOSDIR_OPTS) %T/platforms/$(PLATFORM)/$(STARTUP_FILE))
+PATH_LINKER_FILE = $(shell tos-sub-tosdir $(TOSDIR_OPTS) %T/platforms/$(PLATFORM))
+
+#PROGRAMMER ?= edbg
+
+GCC     = arm-none-eabi-gcc
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
+SIZE    = arm-none-eabi-size
+NM      = arm-none-eabi-nm
+LIBS    = -lm
+
+SET_ID = $(shell tos-sub-tosdir $(TOSDIR_OPTS) %T/../support/make/samxpro/edbg-master/tos-set-symbols-asf)
+
+
+OPTFLAGS ?= -O3 -g
+CFLAGS += -mthumb -fno-strict-aliasing
+PFLAGS += -Wall -Wshadow
+PFLAGS += -finline-limit=100000
+
+TOSMAKE_ADDITIONAL_INPUTS += $(PATH_AND_STARTUP_FILE)
+
+LDFLAGS += -L$(PATH_LINKER_FILE) -T $(LINKER_FILE)
+
+ifndef TOSMAKE_PROGRAMMER_TYPE
+  $(call TOSMake_include,samxpro/edbg.extra)
+endif
+
+INSTALL_BIN = $(MAIN_BIN).out$(if $(NODEID),-$(NODEID),)
+INSTALL_IHEX = $(MAIN_IHEX).out$(if $(NODEID),-$(NODEID),)
+
+
+TOSMAKE_BINARY_FORMAT = bin
+TOSMAKE_BINARY_IN = $(MAIN_BIN)
+TOSMAKE_BINARY_OUT = $(INSTALL_BIN)
+
+samxpro-setid: tinyos_image FORCE
+	@cmd () { echo "$$@"; $$@; }; cmd $(SET_ID) --objcopy $(OBJCOPY) --objdump $(OBJDUMP) --target1 ihex --target2 binary $(MAIN_EXE) $(INSTALL_IHEX) $(INSTALL_BIN) TOS_NODE_ID=$(NODEID) $(AMADDR)=$(NODEID);
+
+#samxpro-delsetid: program FORCE
+#	rm -f $(subst .$(TOSMAKE_BINARY_FORMAT).,.exe.,$(TOSMAKE_BINARY_OUT)) $(TOSMAKE_BINARY_OUT)

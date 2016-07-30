@@ -1,0 +1,30 @@
+#-*-Makefile-*- vim:syntax=make
+#$Id: avr-studio-debug.extra,v 1.2 2009-01-21 16:26:55 sallai Exp $
+
+BUILD_DEPS += $(POST_BUILD_EXTRA_DEPS) buildelf
+
+APPC_WINPATH = $(TOSMAKE_BUILD_DIR)/app-win.c
+MAIN_ELF = $(TOSMAKE_BUILD_DIR)/main.elf
+PYTHONSCRIPT = $(shell tos-sub-tosdir $(TOSDIR_OPTS) %T/../support/sdk/python/pynopath.py)
+
+# no inlining or optimizations
+#OPTFLAGS += -O0 -fnesc-no-inline
+
+# produce dwarf-2 debug information for AVR Studio
+OPTFLAGS += -gdwarf-2
+
+# we use ncc to invoke gcc thus need to allow dollars in identifiers
+#OPTFLAGS += -fdollars-in-identifiers
+
+# alternatively, we can use a different separator
+PFLAGS += -fnesc-separator=__
+	
+
+buildelf: FORCE
+	@echo "    building ELF output $(MAIN_ELF) for debugging in AVR Studio"
+	python $(PYTHONSCRIPT) $(TOSMAKE_BUILD_DIR)/app.c > $(APPC_WINPATH)
+	@echo "$(NESC) -o $(MAIN_ELF) $(TOSMAKE_FIRST_FLAGS) $(SAFE_FLAGS) $(OPTFLAGS) $(NESC_PFLAGS) $(CFLAGS) $(WIRING_CHECK_FLAGS) $(APPC_WINPATH) $(LIBS) $(LDFLAGS) $(TOSMAKE_ADDITIONAL_INPUTS)"
+	@$(NESC) -o $(MAIN_ELF) $(TOSMAKE_FIRST_FLAGS) $(SAFE_FLAGS) $(OPTFLAGS) $(NESC_PFLAGS) $(CFLAGS) $(WIRING_CHECK_FLAGS) $(APPC_WINPATH) $(LIBS) $(LDFLAGS) $(TOSMAKE_ADDITIONAL_INPUTS)
+	@$(OBJDUMP) --dwarf=decodedline $(MAIN_ELF) > $(TOSMAKE_BUILD_DIR)/main.lines
+
+

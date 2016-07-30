@@ -1,0 +1,12 @@
+#-*-Makefile-*- vim:syntax=make
+#$Id: avrispmkii.extra,v 1.1 2008-09-23 15:47:56 sallai Exp $
+
+TOSMAKE_PROGRAMMER_TYPE = edbg
+
+PROGRAMMER_FLAGS = -t $(PROGRAMMER_TARGET) -p -b -f
+PROGRAMMER_INSTALL_SREC_FLAGS = $(INSTALL_SREC)
+
+PROGRAMMER_PATH = $(shell tos-sub-tosdir $(TOSDIR_OPTS) %T/../support/make/samxpro/edbg-master/edbg)
+
+
+

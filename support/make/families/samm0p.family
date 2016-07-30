@@ -1,0 +1,62 @@
+PFLAGS += -I%T/chips/cortex/sam/samm0p/
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper/spi
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper/timer
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper/usart
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/common/boards
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/common/utils
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/boards			
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/extint			
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/port
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/rtc
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom			
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/usart
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/spi
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/clock
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/interrupt
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/pinmux
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/power
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/tc
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/utils/
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/utils/header_files
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/utils/preprocessor
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/thirdparty/CMSIS/Include
+
+PFLAGS += -I%T/lib/serial
+PFLAGS += -I%T/lib/power
+PFLAGS += -I%T/lib/timer
+
+PFLAGS += -fnesc-genprefix="'\#define NESC_PRAGMA(s) _Pragma(s)'"
+PFLAGS += -mcpu=cortex-m0
+PFLAGS += -nostartfiles
+PFLAGS += -fnesc-target=env
+PFLAGS += -fnesc-no-debug
+
+CFLAGS+=-DARM_MATH_CM0PLUS=true
+CFLAGS+=-DEXTINT_CALLBACK_MODE=true
+CFLAGS+=-DRTC_COUNT_ASYNC=true
+CFLAGS+=-DUSART_CALLBACK_MODE=true
+CFLAGS+=-DSPI_CALLBACK_MODE=true
+CFLAGS+=-DTC_ASYNC=true
+
+#CFLAGS+=-DFEATURE_SYSTEM_CLOCK_DPLL
+
+CFLAGS += -std=c99
+
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/tc/tc_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/spi/spi_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/spi/spi.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/usart/usart_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/usart/usart.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/sercom_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/sercom/sercom.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/common/utils/interrupt/interrupt_sam_nvic.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/extint/extint_callback.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/pinmux/pinmux.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/port/port.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/interrupt/system_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/system.c
+
+
+export NESC_MACHINE = structure_size_boundary=32, pointer=4,4 float=4,4 double=8,4 long_double=8,4 short=2,2 int=4,4 long=4,4 long_long=8,4 int1248_align=1,2,4,4 wchar_size_size=4,4 char_wchar_signed=false,true

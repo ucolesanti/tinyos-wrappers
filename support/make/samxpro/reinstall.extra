@@ -1,0 +1,5 @@
+#-*-Makefile-*- vim:syntax=make
+#$Id: reinstall.extra,v 1.5 2008-06-18 20:22:51 razvanm Exp $
+INSTALL = $(REINSTALL)
+TOSMAKE_DO_REINSTALL = y
+$(call TOSMake_include,samxpro/install.extra)

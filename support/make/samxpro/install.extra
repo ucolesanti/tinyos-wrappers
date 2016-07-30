@@ -1,0 +1,12 @@
+#-*-Makefile-*- vim:syntax=make
+
+NODEID = $(INSTALL)
+
+BUILD_DEPS = delsetid
+
+
+PROGRAMMER_NAME ?= $(TOSMAKE_PROGRAMMER_TYPE)
+
+program: samxpro-setid FORCE
+	@echo "    installing $(PLATFORM) binary using $(TOSMAKE_PROGRAMMER_TYPE)"
+	$(PROGRAMMER_PATH) $(PROGRAMMER_FLAGS) $(PROGRAMMER_INSTALL_SREC_FLAGS) $(INSTALL_BIN)
