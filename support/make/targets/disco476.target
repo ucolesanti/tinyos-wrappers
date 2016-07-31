@@ -1,0 +1,18 @@
+#-*-Makefile-*- vim:syntax=make
+
+TARGET = disco476
+
+PROGRAMMER_TARGET = atmel_cm0p
+
+STARTUP_FILE = startup_stm32l476xx.s
+LINKER_FILE = STM32L476VGTx_FLASH.ld
+OPTFLAGS ?= -O3
+
+VOLUME_FILE = volumes-at45db.xml
+TOSMAKE_VOLUME_ALLOCATOR_FLAGS ?= tos-storage-at45db
+
+$(call TOSMake_include_platform,disco476)
+$(call TOSMake_include_make_platform,samxpro)
+
+disco476: $(BUILD_DEPS)
+	@:
