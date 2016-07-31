@@ -1,0 +1,4 @@
+PFLAGS += -I%T/chips/rf233
+PFLAGS += -I%T/platforms/$(PLATFORM)/reb233xpro
+PFLAGS += -I%T/lib/rfxlink/layers
+PFLAGS += -I%T/lib/rfxlink/util
