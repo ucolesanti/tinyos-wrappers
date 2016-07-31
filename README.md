@@ -25,4 +25,4 @@ export TINYOS_ROOT_DIR_ADDITIONAL
 9 - check if it works, if yes, try to program the SamR21 Xplained Pro board by typing: make samr21xpro reinstall,1
 
 # Common issues
-- You could have some permission problems when trying to program the board. The edbg programming tool (which is developed by Alex Taradov and can be found here: https://github.com/ataradov/edbg), which I copied in support/make/samxpro/edbg-master, has a file name 90-atmel-edbg.rules which has to be copied in /etc/udev/rules.d to enable programming permissions on Edbg devices (once copied, type "sudo service udev restart" then unplug and replug the device.
+- You could have some permission problems when trying to program the board. The edbg programming tool (which is developed by Alex Taradov and can be found here: https://github.com/ataradov/edbg), which I copied in support/make/samxpro/edbg-master, has a file named 90-atmel-edbg.rules which has to be copied in /etc/udev/rules.d to enable programming permissions on Edbg devices (once copied, type "sudo service udev restart" then unplug and replug the device).
