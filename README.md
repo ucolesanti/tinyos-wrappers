@@ -2,7 +2,7 @@
 TinyOS wrapping code for other frameworks (e.g., Atmel Software Framework or Stm32Cube)
 
 # Getting Started
-1 - make sure to have a proper tinyos-main installation and you have an arm compiler installed (I used gcc-arm-none-eabi package from debian jessie repository (4.8.1-1) )
+1 - make sure to have a proper tinyos-main installation and that you have an arm compiler installed (I used gcc-arm-none-eabi package from debian jessie repository (4.8.1-1) )
 
 2 - clone this git wherever you want
 
