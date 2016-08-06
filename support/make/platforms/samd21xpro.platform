@@ -1,19 +1,19 @@
 PFLAGS += -I%T/platforms/samd21xpro
 PFLAGS += -I%T/platforms/samd21xpro/config
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/utils/cmsis/samd21/include
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/utils/cmsis/samd21/source
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/power/power_sam_d_r
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/clock/clock_samd21_r21_da
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/interrupt/system_interrupt_samd21
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/reset/reset_sam_d_r			
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/include
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/source
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/power/power_sam_d_r
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/interrupt/system_interrupt_samd21
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/reset/reset_sam_d_r			
 
 CFLAGS+=-D__SAMD21J18A__
 CFLAGS+=-DBOARD=SAMD21_XPLAINED_PRO
 
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/tc/tc_sam_d_r/tc.c
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count_interrupt.c
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count.c
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/extint/extint_sam_d_r/extint.c
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
-TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.31.0/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tc/tc_sam_d_r/tc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/extint/extint_sam_d_r/extint.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
 
