@@ -51,8 +51,17 @@
 
 #include "cortexm0hardware.h"
 
- //typedef uint8_t bool;
-//typedef uint8_t _Bool;
+enum{
+	SAMM0_PWR_IDLE2 = 0,
+	SAMM0_PWR_STDBY = 1,
+};
+
+typedef uint8_t mcu_power_t @combine("mcombine");
+
+/* Combine function.  */
+mcu_power_t mcombine(mcu_power_t m1, mcu_power_t m2) @safe() {
+  return (m1 < m2)? m1: m2;
+}
 
 ////// PORT DEFINE
 #define PIN_PA0 PIN_PA00

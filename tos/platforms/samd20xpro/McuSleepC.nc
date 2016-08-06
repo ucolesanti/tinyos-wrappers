@@ -42,25 +42,52 @@ module McuSleepC
     interface McuSleep;
     interface McuPowerState;
   }
+  uses{
+    interface McuPowerOverride;
+  }
 
 }
 implementation{
+norace int8_t powerState = -1;
+
   async command void McuSleep.sleep()
   {
+    if( powerState < 0 ) {
+      powerState = call McuPowerOverride.lowestState();
+    }
+
 #if (SAMD20 || SAMD21 || SAMR21)
   /* Errata: Make sure that the Flash does not power all the way down
    * when in sleep mode. */
   #warning ################## Applying patch for errata 13140 (ROM in standby)
   NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
 #endif
-	  system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
-	  __nesc_enable_interrupt();
-	  system_sleep();
+  switch(powerState){
+     case SAMM0_PWR_IDLE2:
+        system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
+     break;
+     case SAMM0_PWR_STDBY:
+       system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+     break;
+     default:
+       system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
+     break;
+        
+   }
+    __nesc_enable_interrupt();
+    system_sleep();
     __nesc_disable_interrupt();
 
   }
 
-  async command void McuPowerState.update(){}
+  async command void McuPowerState.update(){
+    powerState = -1;
+  }
+
+  default async command mcu_power_t McuPowerOverride.lowestState()
+  {
+    return SAMM0_PWR_STDBY;
+  }
   
 }
 

@@ -43,6 +43,8 @@ generic module SamAlarmP(uint32_t dev, typedef precision_tag, typedef size_tag@i
 	provides interface Alarm<precision_tag,size_tag>;
 	provides interface Counter<precision_tag,size_tag>;
 	provides interface Init ;
+	provides interface McuPowerOverride;
+	uses interface McuPowerState;
 }
 implementation{
 	struct tc_module tc_instance ;
@@ -59,7 +61,7 @@ implementation{
 
 		config_tc.clock_source = gen;
 		config_tc.clock_prescaler = div;
-		config_tc.run_in_standby = true ; // TODO: remove as soon as the alarm supports the dynamic switch of this feature. ndUgo
+		config_tc.run_in_standby = false ;
 
 		while(tc_init(&tc_instance, (Tc*) dev, &config_tc) != STATUS_OK){
 
@@ -102,6 +104,7 @@ implementation{
 		// called in atomic context
 		void callback_compareMatch(struct tc_module *const module_inst){
 			tc_disable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+			call McuPowerState.update();
 			signal Alarm.fired();
 		}
 
@@ -110,6 +113,7 @@ implementation{
 		async command void Alarm.stop()
 		{
 			tc_disable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+			call McuPowerState.update();
 		}
 
 		async command bool Alarm.isRunning()
@@ -123,6 +127,7 @@ implementation{
 			tc_set_compare_value(&tc_instance,TC_COMPARE_CAPTURE_CHANNEL_0,time);
 			tc_clear_status(&tc_instance,TC_STATUS_CHANNEL_0_MATCH);
 			tc_enable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+			call McuPowerState.update();
 		}
 
 		async command void Alarm.startAt(size_tag nt0, size_tag ndt)
@@ -163,6 +168,15 @@ implementation{
 		async command size_tag Alarm.getAlarm()
 		{
 			return (size_tag) tc_get_capture_value(&tc_instance,TC_COMPARE_CAPTURE_CHANNEL_0);
+		}
+
+		async command mcu_power_t McuPowerOverride.lowestState()
+		{
+			if(tc_instance.hw->COUNT16.INTENSET.bit.MC0){
+				return SAMM0_PWR_IDLE2;
+			}
+			else return SAMM0_PWR_STDBY;
+
 		}
 
 }

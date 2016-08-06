@@ -477,6 +477,16 @@ static inline void port_get_config_defaults(
 	config->powersave  = false;
 }
 
+//################################# HACK NEEDED for TinyOS SamGpioP ###############
+static inline asf_bool_t port_pin_is_output(
+			const uint8_t gpio_pin)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
+
+	return (port_base->DIR.reg & pin_mask);
+}
+
 void port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_config *const config);

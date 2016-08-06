@@ -45,12 +45,14 @@ configuration SamAlarm31khzTC3C{
 }
 implementation{
 	components new SamAlarmP((uint32_t)TC3,T32khz,uint16_t,1,GENERATOR_31KHZ,DIV_8MHZ_31KHZ) ;
+	components McuSleepC;
 	Alarm = SamAlarmP ;
 	Counter = SamAlarmP ;
 
 	  components MainC;
 
 	  MainC.SoftwareInit -> SamAlarmP;
-
+	McuSleepC.McuPowerOverride -> SamAlarmP;
+	SamAlarmP.McuPowerState -> McuSleepC;
 }
 

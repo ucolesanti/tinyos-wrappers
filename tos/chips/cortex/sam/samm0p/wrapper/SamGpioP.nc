@@ -48,176 +48,176 @@ module SamGpioP{
 implementation{
 
 
-	#define PORTCONF(n,p) struct port_config pin_conf_##p##n = {PORT_PIN_DIR_INPUT,PORT_PIN_PULL_UP,false};
+	//#define PORTCONF(n,p) struct port_config pin_conf_##p##n = {PORT_PIN_DIR_INPUT,PORT_PIN_PULL_UP,false};
+
+	#define PORTSET(n,p) \
+  	async command void Port_##p##n.set(){ \
+		struct port_config pin_conf;\
+	 	atomic{\
+	 	  if(port_pin_is_output(HPL_PIN_##p##n)){ \
+	 		  port_pin_set_output_level(HPL_PIN_##p##n,1); \
+	 	  } \
+	 	  else{ \
+	 		  port_get_config_defaults(&pin_conf); \
+	 		  pin_conf.input_pull = PORT_PIN_PULL_UP; \
+	 		  port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
+	 	  } \
+   	    }\
+    }
 
 	// #define PORTSET(n,p) \
 	//   async command void Port_##p##n.set(){ \
-	// 	struct port_config pin_conf;\
 	// 	atomic{\
-	// 	  if(call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 		  call HplPort.port_pin_set_output_level(HPL_PIN_##p##n,1); \
+	// 	  if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
+	// 		   port_pin_set_output_level(HPL_PIN_##p##n,1); \
 	// 	  } \
 	// 	  else{ \
-	// 		  call HplPort.port_get_config_defaults(&pin_conf); \
-	// 		  pin_conf.input_pull = PORT_PIN_PULL_UP; \
-	// 		  call HplPort.port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
+	// 		  pin_conf_##p##n.input_pull = PORT_PIN_PULL_UP; \
+	// 		   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
 	// 	  } \
- //  	    }\
-	//   }
-
-	#define PORTSET(n,p) \
-	  async command void Port_##p##n.set(){ \
-		atomic{\
-		  if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
-			   port_pin_set_output_level(HPL_PIN_##p##n,1); \
-		  } \
-		  else{ \
-			  pin_conf_##p##n.input_pull = PORT_PIN_PULL_UP; \
-			   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
-		  } \
-	  	  }\
-	  }
-
-	// #define PORTCLR(n,p) \
-	//   async command void Port_##p##n.clr(){ \
-	//   	struct port_config pin_conf;\
-	// 	atomic{\
-	// 		if(call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 			  call HplPort.port_pin_set_output_level(HPL_PIN_##p##n,0); \
-	// 	    } \
-	// 		else{ \
-	// 			  call HplPort.port_get_config_defaults(&pin_conf); \
-	// 			  pin_conf.input_pull = PORT_PIN_PULL_NONE; \
-	// 			  call HplPort.port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
-	// 		} \
-	//   	}\
+	//   	  }\
 	//   }
 
 	#define PORTCLR(n,p) \
-	  async command void Port_##p##n.clr(){ \
+  	async command void Port_##p##n.clr(){ \
+	  	struct port_config pin_conf;\
 		atomic{\
-		if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
-			   port_pin_set_output_level(HPL_PIN_##p##n,0); \
-		  } \
-		  else{ \
-			  pin_conf_##p##n.input_pull = PORT_PIN_PULL_NONE; \
-			   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
-		  } \
-	  	  }\
-	  }
+			if(port_pin_is_output(HPL_PIN_##p##n)){ \
+				  port_pin_set_output_level(HPL_PIN_##p##n,0); \
+		    } \
+			else{ \
+				  port_get_config_defaults(&pin_conf); \
+				  pin_conf.input_pull = PORT_PIN_PULL_NONE; \
+				  port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
+			} \
+	  	}\
+  	}
+
+	// #define PORTCLR(n,p) \
+	//   async command void Port_##p##n.clr(){ \
+	// 	atomic{\
+	// 	if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
+	// 		   port_pin_set_output_level(HPL_PIN_##p##n,0); \
+	// 	  } \
+	// 	  else{ \
+	// 		  pin_conf_##p##n.input_pull = PORT_PIN_PULL_NONE; \
+	// 		   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
+	// 	  } \
+	//   	  }\
+	//   }
+
+	#define PORTTGL(n,p) \
+  	async command void Port_##p##n.toggle(){ \
+		atomic{\
+			if(port_pin_is_output(HPL_PIN_##p##n)){ \
+				  port_pin_toggle_output_level(HPL_PIN_##p##n); \
+			  } \
+			  /*else do nothing*/ \
+		}\
+  	}
 
 	// #define PORTTGL(n,p) \
 	//   async command void Port_##p##n.toggle(){ \
 	// 	atomic{\
-	// 		if(call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 			  call HplPort.port_pin_toggle_output_level(HPL_PIN_##p##n); \
-	// 		  } \
-	// 		  /*else do nothing*/ \
+	// 	if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
+	// 		   port_pin_toggle_output_level(HPL_PIN_##p##n); \
+	// 	  } \
+	// 	  /*else do nothing*/ \
 	// 	}\
 	//   }
 
-	#define PORTTGL(n,p) \
-	  async command void Port_##p##n.toggle(){ \
-		atomic{\
-		if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
-			   port_pin_toggle_output_level(HPL_PIN_##p##n); \
-		  } \
-		  /*else do nothing*/ \
-		}\
-	  }
+	#define PORTGET(n,p) \
+  	async command bool Port_##p##n.get(){ \
+		  atomic{\
+			  if(port_pin_is_output(HPL_PIN_##p##n)){ \
+			  	  return (port_pin_get_output_level(HPL_PIN_##p##n) != 0); \
+			  } \
+			  else{ \
+				  return (port_pin_get_input_level(HPL_PIN_##p##n) != 0); \
+			  } \
+	  	  }\
+  	}
 
 	// #define PORTGET(n,p) \
 	//   async command bool Port_##p##n.get(){ \
 	// 	  atomic{\
-	// 		  if(call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 		  	  return (call HplPort.port_pin_get_output_level(HPL_PIN_##p##n) != 0); \
-	// 		  } \
-	// 		  else{ \
-	// 			  return ( HplPort.port_pin_get_input_level(HPL_PIN_##p##n) != 0); \
-	// 		  } \
-	//   	  }\
-	//   }
-
-	#define PORTGET(n,p) \
-	  async command bool Port_##p##n.get(){ \
-		  atomic{\
-		  if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
-		  	  return  port_pin_get_output_level(HPL_PIN_##p##n); \
-		  } \
-		  else{ \
-			  return  port_pin_get_input_level(HPL_PIN_##p##n); \
-		  } \
-	  	  }\
-	  }
-
-	// #define PORTMKINPUT(n,p) \
-	//   async command void Port_##p##n.makeInput(){ \
-	//   	struct port_config pin_conf;\
- //    	atomic{\
-	// 	  if(call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 		  call HplPort.port_get_config_defaults(&pin_conf); \
-	// 		  pin_conf.input_pull = PORT_PIN_PULL_NONE;\
-	// 		  call HplPort.port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
+	// 	  if(pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT || pin_conf_##p##n.direction == PORT_PIN_DIR_OUTPUT_WTH_READBACK){ \
+	// 	  	  return  port_pin_get_output_level(HPL_PIN_##p##n); \
+	// 	  } \
+	// 	  else{ \
+	// 		  return  port_pin_get_input_level(HPL_PIN_##p##n); \
 	// 	  } \
 	//   	  }\
 	//   }
 
-    #define PORTMKINPUT(n,p) \
-	  async command void Port_##p##n.makeInput(){ \
+	#define PORTMKINPUT(n,p) \
+  	async command void Port_##p##n.makeInput(){ \
+	  	struct port_config pin_conf;\
     	atomic{\
-		  if(pin_conf_##p##n.direction != PORT_PIN_DIR_INPUT){ \
-			  pin_conf_##p##n.direction = PORT_PIN_DIR_INPUT; \
-			   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
+		  if(port_pin_is_output(HPL_PIN_##p##n)){ \
+			  port_get_config_defaults(&pin_conf); \
+			  pin_conf.input_pull = PORT_PIN_PULL_NONE;\
+			  port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
 		  } \
-	  	  }\
-	  }
+  	  	}\
+  	}
 
-	// #define PORTISINPUT(n,p) \
-	//   async command bool Port_##p##n.isInput(){ \
-	// 	  atomic return (call HplPort.port_pin_is_output(HPL_PIN_##p##n) == 0) ; \
-	//   }
+   //  #define PORTMKINPUT(n,p) \
+	  // async command void Port_##p##n.makeInput(){ \
+   //  	atomic{\
+		 //  if(pin_conf_##p##n.direction != PORT_PIN_DIR_INPUT){ \
+			//   pin_conf_##p##n.direction = PORT_PIN_DIR_INPUT; \
+			//    port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
+		 //  } \
+	  // 	  }\
+	  // }
 
 	#define PORTISINPUT(n,p) \
 	  async command bool Port_##p##n.isInput(){ \
-		  atomic return pin_conf_##p##n.direction == PORT_PIN_DIR_INPUT ; \
-	  }
+		  atomic return (port_pin_is_output(HPL_PIN_##p##n) == 0) ; \
+  	}
 
-	// #define PORTMKOUTPUT(n,p) \
-	//   async command void Port_##p##n.makeOutput(){ \
-	// 	struct port_config pin_conf;\
-	// 	atomic{\
-	// 	if(! call HplPort.port_pin_is_output(HPL_PIN_##p##n)){ \
-	// 		  call HplPort.port_get_config_defaults(&pin_conf); \
-	// 		  pin_conf.direction = PORT_PIN_DIR_OUTPUT;\
-	// 		  pin_conf.input_pull = PORT_PIN_PULL_NONE;\
-	// 		  call HplPort.port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
-	// 	  } \
-	// 	  }\
+	// #define PORTISINPUT(n,p) \
+	//   async command bool Port_##p##n.isInput(){ \
+	// 	  atomic return pin_conf_##p##n.direction == PORT_PIN_DIR_INPUT ; \
 	//   }
 
 	#define PORTMKOUTPUT(n,p) \
 	  async command void Port_##p##n.makeOutput(){ \
+		struct port_config pin_conf;\
 		atomic{\
-		if(pin_conf_##p##n.direction != PORT_PIN_DIR_OUTPUT){ \
-			  pin_conf_##p##n.direction = PORT_PIN_DIR_OUTPUT; \
-			   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
+		if(! port_pin_is_output(HPL_PIN_##p##n)){ \
+			  port_get_config_defaults(&pin_conf); \
+			  pin_conf.direction = PORT_PIN_DIR_OUTPUT;\
+			  pin_conf.input_pull = PORT_PIN_PULL_NONE;\
+			  port_pin_set_config(HPL_PIN_##p##n,&pin_conf); \
 		  } \
-		  }\
-	  }
+	  	}\
+	}
 
-	#define PORTISOUTPUT(n,p) \
+	// #define PORTMKOUTPUT(n,p) \
+	//   async command void Port_##p##n.makeOutput(){ \
+	// 	atomic{\
+	// 	if(pin_conf_##p##n.direction != PORT_PIN_DIR_OUTPUT){ \
+	// 		  pin_conf_##p##n.direction = PORT_PIN_DIR_OUTPUT; \
+	// 		   port_pin_set_config(HPL_PIN_##p##n,&pin_conf_##p##n); \
+	// 	  } \
+	// 	  }\
+	//   }
+
+	// #define PORTISOUTPUT(n,p) \
+	//   async command bool Port_##p##n.isOutput(){ \
+	// 	 atomic return !(pin_conf_##p##n.direction == PORT_PIN_DIR_INPUT) ; \
+	//   }
+
+  	#define PORTISOUTPUT(n,p) \
 	  async command bool Port_##p##n.isOutput(){ \
-		 atomic return !(pin_conf_##p##n.direction == PORT_PIN_DIR_INPUT) ; \
+		 atomic return ( port_pin_is_output(HPL_PIN_##p##n) != 0) ; \
 	  }
 
-	  // 	#define PORTISOUTPUT(n,p) \
-	  // async command bool Port_##p##n.isOutput(){ \
-		 // atomic return ( port_pin_is_output(HPL_PIN_##p##n) != 0) ; \
-	  // }
-
-	  MREPEAT(32,PORTCONF,PA)
-	MREPEAT(32,PORTCONF,PB)
-	MREPEAT(32,PORTCONF,PC)
+	//   MREPEAT(32,PORTCONF,PA)
+	// MREPEAT(32,PORTCONF,PB)
+	// MREPEAT(32,PORTCONF,PC)
 
 	MREPEAT(32,PORTSET,PA)
 	MREPEAT(32,PORTSET,PB)
