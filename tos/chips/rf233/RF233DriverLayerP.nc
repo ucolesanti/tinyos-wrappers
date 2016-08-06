@@ -684,7 +684,7 @@ implementation
 	inline void downloadMessage()
 	{
 		uint8_t length;
-		uint16_t crc;
+		uint8_t crc;
 
 		call SELN.clr();
 		call FastSpiByte.write(RF233_CMD_FRAME_READ);
@@ -703,7 +703,7 @@ implementation
 
 			data = getPayload(rxMsg);
 			getHeader(rxMsg)->length = length;
-			crc = 0;
+			crc = 1;
 
 			// we do not store the CRC field
 			length -= 2;
@@ -715,21 +715,21 @@ implementation
 			length -= read;
 
 			do {
-				crc = RF233_CRCBYTE_COMMAND(crc, *(data++) = call FastSpiByte.splitReadWrite(0));
+				*(data++) = call FastSpiByte.splitReadWrite(0);
 			}
 			while( --read != 0  );
 
 			if( signal RadioReceive.header(rxMsg) )
 			{
 				while( length-- != 0 )
-					crc = RF233_CRCBYTE_COMMAND(crc, *(data++) = call FastSpiByte.splitReadWrite(0));
+					*(data++) = call FastSpiByte.splitReadWrite(0);
 
-				crc = RF233_CRCBYTE_COMMAND(crc, call FastSpiByte.splitReadWrite(0));
-				crc = RF233_CRCBYTE_COMMAND(crc, call FastSpiByte.splitReadWrite(0));
+				call FastSpiByte.splitReadWrite(0);
+				call FastSpiByte.splitReadWrite(0);
 
 				call PacketLinkQuality.set(rxMsg, call FastSpiByte.splitReadWrite(0)); // LQI
 				call FastSpiByte.splitReadWrite(0) ; // ED
-				call FastSpiByte.splitRead() ; // RX_STATUS
+				if(call FastSpiByte.splitRead() & (1<<7)) crc = 0; // RX_STATUS -> RX_CRC_VALID bit
 			}
 			else
 			{

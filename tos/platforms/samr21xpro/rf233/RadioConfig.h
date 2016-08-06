@@ -80,11 +80,11 @@ enum
  * This is the command used to calculate the CRC for the RF233 chip.
  * TODO: Check why the default crcByte implementation is in a different endianness
  */
-inline uint16_t RF233_CRCBYTE_COMMAND(uint16_t crc, uint8_t data)
-{
+//inline uint16_t RF233_CRCBYTE_COMMAND(uint16_t crc, uint8_t data)
+//{
 	//return _crc_ccitt_update(crc, data);
-	return 0; // TODO: need to find the crc function of the cortex! ndUgo
-}
+//	return 0; // TODO: need to find the crc function of the cortex! ndUgo
+//}
 
 /**
  * This is the timer type of the radio alarm interface
