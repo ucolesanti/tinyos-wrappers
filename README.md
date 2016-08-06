@@ -6,9 +6,9 @@ TinyOS wrapping code for other frameworks (e.g., Atmel Software Framework or Stm
 
 2 - clone this git wherever you want
 
-3 - download the Atmel Software Framework (I used version 3.31.0.46) and extract the xdk-asf-3.31.0 folder in tos/chips/cortex/sam. Then download the Stm32L4 framework (I used V.1.5.0) and extract the STM32L4xx_HAL_Driver folder in tos/chips/cortex/stm32l4
+3 - download the Atmel Software Framework (currently supported version: 3.32.0.48) and extract the xdk-asf-3.32.0 folder in tos/chips/cortex/sam. Then download the Stm32L4 framework (currently supported version: V.1.5.0) and extract the STM32L4xx_HAL_Driver folder in tos/chips/cortex/stm32l4
 
-4 - for the Atmel Software Framework, copy the content of the patch-xdk-asf-3.31.0 in the xdk-asf-3.31.0 folder and overwrite all the modified files. For the Stm32Cube framework, select the STM32L4xx_HAL_Driver folder and replace all occurences of the keywork SUCCESS with HAL_SUCCESS (enable case sensitive search first)
+4 - for the Atmel Software Framework, copy the content of the patch-xdk-asf-3.32.0 in the xdk-asf-3.32.0 folder and overwrite all the modified files. For the Stm32Cube framework, select the STM32L4xx_HAL_Driver folder and replace all occurences of the keywork SUCCESS with HAL_SUCCESS (enable case sensitive search first)
 
 5 - create a Makefile.include in the root directory that includes the following code:
 ```
