@@ -86,17 +86,17 @@
 
 
 
-#define ROUNDDOWN(a, n)                                         \
-({                                                              \
-        uint32_t __a = (uint32_t) (a);                          \
-        (typeof(a)) (__a - __a % (n));                          \
-})
-// Round up to the nearest multiple of n
-#define ROUNDUP(a, n)                                           \
-({                                                              \
-        uint32_t __n = (uint32_t) (n);                          \
-        (typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n)); \
-})
+// #define ROUNDDOWN(a, n)                                         \
+// ({                                                              \
+//         uint32_t __a = (uint32_t) (a);                          \
+//         (typeof(a)) (__a - __a % (n));                          \
+// })
+// // Round up to the nearest multiple of n
+// #define ROUNDUP(a, n)                                           \
+// ({                                                              \
+//         uint32_t __n = (uint32_t) (n);                          \
+//         (typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n)); \
+// })
 
 typedef uint32_t __nesc_atomic_t;
 
@@ -136,8 +136,12 @@ inline void __nesc_enable_interrupt() __attribute__((always_inline))
 	// 	: // output
 	// 	: "r" (newState) // input
 	// );
-	__DMB();
-	__enable_irq(); // TODO: the previous implementation was not working in atmel studio. Check why.
+	
+	// __DMB();
+	// __enable_irq(); // TODO: the previous implementation was not working in atmel studio. Check why.
+
+	cpu_irq_enable();
+
 }
 
 // See definitive guide to Cortex-M3, p. 141, 142
@@ -151,8 +155,12 @@ inline void __nesc_disable_interrupt() __attribute__((always_inline))
 	// 	: // output
 	// 	: "r" (newState) // input
 	// );
-	__disable_irq(); // TODO: the previous implementation was not working in atmel studio. Check why.
-	__DMB();
+	
+	// __disable_irq(); // TODO: the previous implementation was not working in atmel studio. Check why.
+	// __DMB();
+
+	cpu_irq_disable();
+
 }
 
 #ifdef MTB_ENABLED

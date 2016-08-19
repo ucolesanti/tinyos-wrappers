@@ -1,0 +1,27 @@
+PFLAGS += -I%T/chips/cortex/stm32l4
+PFLAGS += -I%T/chips/cortex/stm32l4/preprocessor
+PFLAGS += -I%T/chips/cortex/stm32l4/wrapping
+PFLAGS += -I%T/chips/cortex/stm32l4/wrapping/timer
+PFLAGS += -I%T/chips/cortex/stm32l4/wrapping/usart
+PFLAGS += -I%T/chips/cortex/stm32l4/wrapping/spi
+PFLAGS += -I%T/chips/cortex/stm32l4/cmsis
+PFLAGS += -I%T/chips/cortex/stm32l4/STM32L4xx_HAL_Driver/Src
+PFLAGS += -I%T/chips/cortex/stm32l4/STM32L4xx_HAL_Driver/Inc
+PFLAGS += -I%T/lib/serial
+PFLAGS += -I%T/lib/power
+PFLAGS += -I%T/lib/timer
+
+CFLAGS+=-DUSE_FULL_LL_DRIVER
+
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/stm32l4/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/stm32l4/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_lptim.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/stm32l4/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c
+
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/platforms/nucleo476/config/system_stm32l4xx.c
+
+PFLAGS += -mcpu=cortex-m4
+PFLAGS += -nostartfiles
+PFLAGS += -fnesc-target=env
+PFLAGS += -fnesc-no-debug
+
+export NESC_MACHINE = structure_size_boundary=32, pointer=4,4 float=4,4 double=8,4 long_double=8,4 short=2,2 int=4,4 long=4,4 long_long=8,4 int1248_align=1,2,4,4 wchar_size_size=4,4 char_wchar_signed=false,true

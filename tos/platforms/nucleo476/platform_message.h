@@ -29,7 +29,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Author: Miklos Maroti
  */
  /*									
  * Copyright (c) 2015-2016 Ugo Maria Colesanti.  
@@ -63,64 +62,35 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /*
- * File modified for 32L476GDISCOVERY platform using REB233Xpro extension
- * module on SPI1.
- *
  * @author Ugo Maria Colesanti
  * @date   Jul 31, 2016
  */
 
-#include <RadioConfig.h>
-configuration HplRF233C
-{
-	provides
-	{
-		interface GeneralIO as SELN;
-		interface Resource as SpiResource;
-		interface FastSpiByte;
+#ifndef PLATFORM_MESSAGE_H
+#define PLATFORM_MESSAGE_H
 
-		interface GeneralIO as SLP_TR;
-		interface GeneralIO as RSTN;
+#ifdef BOARD_REB233XPRO 
+#include <RF233Radio.h>
+ #endif
+#include <Serial.h>
 
-		interface GpioCapture as IRQ;
-		interface Alarm<TRadio, tradio_size> as Alarm;
-		interface LocalTime<TRadio> as LocalTimeRadio;
-	}
-}
+typedef union message_header {
+	#ifdef BOARD_REB233XPRO
+	rf233packet_header_t rf233;
+	#endif
+	serial_header_t serial;
+} message_header_t;
 
-implementation
-{
-	components HplRF233P;
-	IRQ = HplRF233P.IRQ;
+typedef union message_footer {
+	#ifdef BOARD_REB233XPRO
+	rf233packet_footer_t rf233;
+	#endif
+} message_footer_t;
 
-	components new Stm32L4Spi1C() as SpiC;
+typedef union message_metadata {
+	#ifdef BOARD_REB233XPRO
+	rf233packet_metadata_t rf233;
+	#endif
+} message_metadata_t;
 
-	SpiResource = SpiC;
-	FastSpiByte = SpiC;
-	HplRF233P.SpiConfig -> SpiC.SpiConfig ;
-
-	components new Stm32L4GpioIntWrapperC(LL_SYSCFG_EXTI_PORTE,LL_SYSCFG_EXTI_LINE12,12) as PortE12IntC;
-	components Stm32L4GpioWrapperC as IO;
-	components new NoPinC();
-
-	SLP_TR = IO.Port_B7;
-	RSTN = IO.Port_E10;
-	SELN = IO.Port_B6;
-
-	HplRF233P.PortIRQ -> IO.Port_E12;
-	HplRF233P.IRQInt -> PortE12IntC ;
-
-	HplRF233P.PortCLKM -> NoPinC;
-	HplRF233P.LocalTime -> LocalTime32khzC ;
-
-
-	components RealMainP;
-	RealMainP.PlatformInit -> HplRF233P.PlatformInit;
-
-	components Alarm32khz32C as AlarmC ;
-	Alarm = AlarmC;
-
-	components LocalTime32khzC;
-	LocalTimeRadio = LocalTime32khzC;
-
-}
+#endif

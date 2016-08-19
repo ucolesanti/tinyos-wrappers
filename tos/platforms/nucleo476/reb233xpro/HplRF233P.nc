@@ -31,7 +31,7 @@
  *
  * Author: Miklos Maroti
  */
- /*									
+  /*									
  * Copyright (c) 2015-2016 Ugo Maria Colesanti.  
  * All rights reserved.
  *
@@ -69,58 +69,74 @@
  * @author Ugo Maria Colesanti
  * @date   Jul 31, 2016
  */
-
-#include <RadioConfig.h>
-configuration HplRF233C
+#include "stm32l4xx_ll_spi.h"
+module HplRF233P
 {
 	provides
 	{
-		interface GeneralIO as SELN;
-		interface Resource as SpiResource;
-		interface FastSpiByte;
-
-		interface GeneralIO as SLP_TR;
-		interface GeneralIO as RSTN;
-
 		interface GpioCapture as IRQ;
-		interface Alarm<TRadio, tradio_size> as Alarm;
-		interface LocalTime<TRadio> as LocalTimeRadio;
+		interface Init as PlatformInit;
+	}
+
+	uses
+	{
+		interface GeneralIO as PortCLKM;
+		interface GeneralIO as PortIRQ;
+		interface GpioInterrupt as IRQInt ;
+		interface LocalTime<TRadio>;
+		interface SpiConfig;
 	}
 }
 
 implementation
 {
-	components HplRF233P;
-	IRQ = HplRF233P.IRQ;
+	command error_t PlatformInit.init()
+	{
+		call PortCLKM.makeInput();
+		call PortCLKM.clr();
+		call PortIRQ.makeInput();
+		call PortIRQ.clr();
 
-	components new Stm32L4Spi1C() as SpiC;
+		return SUCCESS;
+	}
 
-	SpiResource = SpiC;
-	FastSpiByte = SpiC;
-	HplRF233P.SpiConfig -> SpiC.SpiConfig ;
+	const spi_tos_config_t my_spi_config = {
+		LL_SPI_BAUDRATEPRESCALER_DIV8,
+		LL_SPI_PHASE_2EDGE,
+		LL_SPI_POLARITY_HIGH
+	};
 
-	components new Stm32L4GpioIntWrapperC(LL_SYSCFG_EXTI_PORTE,LL_SYSCFG_EXTI_LINE12,12) as PortE12IntC;
-	components Stm32L4GpioWrapperC as IO;
-	components new NoPinC();
+	async event void IRQInt.fired(){
+		uint16_t time ;
+		atomic{
+			time = call LocalTime.get() ;
+		}
+		signal IRQ.captured(time);
+	}
 
-	SLP_TR = IO.Port_B7;
-	RSTN = IO.Port_E10;
-	SELN = IO.Port_B6;
+	default async event void IRQ.captured(uint16_t time)
+	{
+	}
 
-	HplRF233P.PortIRQ -> IO.Port_E12;
-	HplRF233P.IRQInt -> PortE12IntC ;
+	async command error_t IRQ.captureRisingEdge()
+	{
+		call IRQInt.enableRisingEdge() ;
+		return SUCCESS;
+	}
 
-	HplRF233P.PortCLKM -> NoPinC;
-	HplRF233P.LocalTime -> LocalTime32khzC ;
+	async command error_t IRQ.captureFallingEdge()
+	{
+		// falling edge comes when the IRQ_STATUS register of the RF230 is read
+		return FAIL;	
+	}
 
+	async command void IRQ.disable()
+	{
+		call IRQInt.disable() ;
+	}
 
-	components RealMainP;
-	RealMainP.PlatformInit -> HplRF233P.PlatformInit;
-
-	components Alarm32khz32C as AlarmC ;
-	Alarm = AlarmC;
-
-	components LocalTime32khzC;
-	LocalTimeRadio = LocalTime32khzC;
+	async event const spi_tos_config_t* SpiConfig.getConfig(){
+		return &my_spi_config;
+	}
 
 }

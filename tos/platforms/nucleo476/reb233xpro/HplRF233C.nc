@@ -99,16 +99,16 @@ implementation
 	FastSpiByte = SpiC;
 	HplRF233P.SpiConfig -> SpiC.SpiConfig ;
 
-	components new Stm32L4GpioIntWrapperC(LL_SYSCFG_EXTI_PORTE,LL_SYSCFG_EXTI_LINE12,12) as PortE12IntC;
+	components new Stm32L4GpioIntWrapperC(LL_SYSCFG_EXTI_PORTB,LL_SYSCFG_EXTI_LINE8,8) as PortB8IntC;
 	components Stm32L4GpioWrapperC as IO;
 	components new NoPinC();
 
-	SLP_TR = IO.Port_B7;
-	RSTN = IO.Port_E10;
-	SELN = IO.Port_B6;
+	SLP_TR = IO.Port_B9; // -> PB9
+	RSTN = IO.Port_C7; // -> PC7
+	SELN = IO.Port_B6; // -> ok
 
-	HplRF233P.PortIRQ -> IO.Port_E12;
-	HplRF233P.IRQInt -> PortE12IntC ;
+	HplRF233P.PortIRQ -> IO.Port_B8;
+	HplRF233P.IRQInt -> PortB8IntC ;
 
 	HplRF233P.PortCLKM -> NoPinC;
 	HplRF233P.LocalTime -> LocalTime32khzC ;

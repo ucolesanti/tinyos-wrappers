@@ -1,0 +1,6 @@
+PFLAGS += -I%T/platforms/nucleo476
+PFLAGS += -I%T/platforms/nucleo476/config
+
+CFLAGS+=-DSTM32L476xx
+CFLAGS+=-DUSE_STM32L4XX_NUCLEO
+
