@@ -23,11 +23,11 @@ export TINYOS_ROOT_DIR_ADDITIONAL
 ```
 7 - run "source tinyos.sh" to set environment variables
 
-8 - go in your tinyos-main/apps/Blink directory and try to compile the SamR21 Xplained Pro board by typing: make samr21xpro (other platforms: samd20xpro, samd21xpro, disco476)
+8 - go in your tinyos-main/apps/Blink directory and try to compile the SamR21 Xplained Pro board by typing: make samr21xpro (other platforms: samd20xpro, samd21xpro, disco476, nucleo476)
 
-9 - check if it works, if yes, try to program the SamR21 Xplained Pro board by typing: make samr21xpro reinstall,1 (same for the other Atmel's platforms, while for the Discovery board, just copy the file build/disco476/main.bin in the mass storage created by the ST-Link interface. 
+9 - check if it works, if yes, try to program the SamR21 Xplained Pro board by typing: make samr21xpro reinstall,1 (same for the other Atmel's platforms, while for the STM Nucleo or Discovery board, just copy the file build/[disco|nucleo]476/main.bin in the mass storage created by the ST-Link interface. 
 
-10 - perform the same test for RadioCountToLeds. Note that if you are using samd20xpro, samd21xpro or disco476 you need to add reb233xpro as an extra (e.g., "make samd21xpro reb233xpro") during compilation otherwise the compiler will throw some errors.
+10 - perform the same test for RadioCountToLeds. Note that if you are using samd20xpro, samd21xpro, disco476 or nucleo476 you need to add reb233xpro as an extra (e.g., "make samd21xpro reb233xpro") during compilation otherwise the compiler will throw some errors.
 
 # Common issues
 - For Atmel boards, you could have some permission problems when trying to program the board through the edbg chip. The edbg programming tool (which is developed by Alex Taradov and can be found here: https://github.com/ataradov/edbg), which I copied in support/make/samxpro/edbg-master, has a file named 90-atmel-edbg.rules which has to be copied in /etc/udev/rules.d to enable programming permissions on Edbg devices (once copied, type "sudo service udev restart" then unplug and replug the device).
