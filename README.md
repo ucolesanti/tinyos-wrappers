@@ -4,6 +4,7 @@ TinyOS wrapping code for other frameworks (e.g., Atmel Software Framework or Stm
 # Watch YouTube videos
 - RadioCountToLeds on SamR21Xpro and SamD21Xpro: https://youtu.be/oHhpAoBjUlI
 - RadioCountToLeds on Nucleo476 and SamR21Xpro: https://youtu.be/ORClH4oxV6s
+- Low Power Listening current measurement on SamR21Xpro: https://youtu.be/8AEeWWkAXQA
 
 # Getting Started
 1 - make sure to have a proper tinyos-main installation and that you have an arm compiler installed (I used gcc-arm-none-eabi package from debian jessie repository (4.8.1-1) )
