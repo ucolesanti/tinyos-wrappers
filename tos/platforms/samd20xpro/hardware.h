@@ -38,7 +38,7 @@
 #define HARDWARE_H
 
 #include "samd20.h"
- #include "samd20_xplained_pro.h"
+#include "board.h"
 // From module: PORT - GPIO Pin Control
 #include <port.h>
 

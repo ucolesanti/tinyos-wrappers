@@ -38,8 +38,8 @@
 #define HARDWARE_H
 
 #include "samd21.h"
- #include "samd21_xplained_pro.h"
-// From module: PORT - GPIO Pin Control
+#include "board.h"
+ // From module: PORT - GPIO Pin Control
 #include <port.h>
 
  // From module: RTC - Real Time Counter in Count Mode (Callback APIs)
