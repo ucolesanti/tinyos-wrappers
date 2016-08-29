@@ -1,0 +1,1 @@
+$(call TOSMake_include_sensor,zigbitrf212)

@@ -1,0 +1,4 @@
+PFLAGS += -I%T/chips/rf212
+PFLAGS += -I%T/platforms/$(PLATFORM)/zigbitrf212
+PFLAGS += -I%T/lib/rfxlink/layers
+PFLAGS += -I%T/lib/rfxlink/util
