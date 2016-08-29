@@ -1,0 +1,19 @@
+#-*-Makefile-*- vim:syntax=make
+
+TARGET = samw25xpro
+
+PROGRAMMER_TARGET = atmel_cm0p
+
+STARTUP_FILE = startup_samd21.c
+LINKER_FILE = samd21g18a_flash.x
+OPTFLAGS ?= -O3
+
+VOLUME_FILE = volumes-at45db.xml
+TOSMAKE_VOLUME_ALLOCATOR_FLAGS ?= tos-storage-at45db
+
+$(call TOSMake_include_family,samm0p)
+$(call TOSMake_include_platform,samw25xpro)
+$(call TOSMake_include_make_platform,samxpro)
+
+samw25xpro: $(BUILD_DEPS)
+	@:

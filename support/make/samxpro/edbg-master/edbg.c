@@ -27,6 +27,7 @@
  */
 
 /*- Includes ----------------------------------------------------------------*/
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -44,7 +45,7 @@
 #include "dbg.h"
 
 /*- Definitions -------------------------------------------------------------*/
-#define VERSION           "v0.2"
+#define VERSION           "v0.5"
 
 #define MAX_DEBUGGERS     20
 #define DAP_FREQ          16000000 // Hz
@@ -59,6 +60,7 @@
 static const struct option long_options[] =
 {
   { "help",      no_argument,        0, 'h' },
+  { "verbose",   no_argument,        0, 'b' },
   { "erase",     no_argument,        0, 'e' },
   { "program",   no_argument,        0, 'p' },
   { "verify",    no_argument,        0, 'v' },
@@ -68,22 +70,29 @@ static const struct option long_options[] =
   { "target",    required_argument,  0, 't' },
   { "list",      no_argument,        0, 'l' },
   { "serial",    required_argument,  0, 's' },
-  { "verbose",   no_argument,        0, 'b' },
+  { "offset",    required_argument,  0, 'o' },
+  { "size",      required_argument,  0, 'z' },
   { 0, 0, 0, 0 }
 };
 
-static const char *short_options = "hepvkrf:t:ls:b";
+static const char *short_options = "hbepvkrf:t:ls:o:z:";
 
-static bool g_erase = false;
-static bool g_program = false;
-static bool g_verify = false;
-static bool g_lock = false;
-static bool g_read = false;
-static char *g_file = NULL;
 static char *g_serial = NULL;
 static bool g_list = false;
 static char *g_target = NULL;
 static bool g_verbose = false;
+
+static target_options_t g_target_options =
+{
+  .erase   = false,
+  .program = false,
+  .verify  = false,
+  .lock    = false,
+  .read    = false,
+  .name    = NULL,
+  .offset  = -1,
+  .size    = -1,
+};
 
 /*- Implementations ---------------------------------------------------------*/
 
@@ -100,6 +109,18 @@ void verbose(char *fmt, ...)
 
     fflush(stdout);
   }
+}
+
+//-----------------------------------------------------------------------------
+void warning(char *fmt, ...)
+{
+  va_list args;
+ 
+  va_start(args, fmt);
+  fprintf(stderr, "Warning: ");
+  vfprintf(stderr, fmt, args);
+  fprintf(stderr, "\n");
+  va_end(args);
 }
 
 //-----------------------------------------------------------------------------
@@ -146,6 +167,17 @@ void perror_exit(char *text)
 }
 
 //-----------------------------------------------------------------------------
+void sleep_ms(int ms)
+{
+  struct timespec ts;
+
+  ts.tv_sec = ms / 1000;
+  ts.tv_nsec = (ms % 1000) * 1000000;
+
+  nanosleep(&ts, NULL);
+}
+
+//-----------------------------------------------------------------------------
 void *buf_alloc(int size)
 {
   void *buf;
@@ -177,14 +209,15 @@ int load_file(char *name, uint8_t *data, int size)
 
   fstat(fd, &stat);
 
-  check(stat.st_size <= size, "image is too big for the selected chip");
+  if (stat.st_size < size)
+    size = stat.st_size;
 
-  rsize = read(fd, data, stat.st_size);
+  rsize = read(fd, data, size);
 
   if (rsize < 0)
     perror_exit("read()");
 
-  check(rsize == stat.st_size, "cannot fully read file");
+  check(rsize == size, "cannot fully read file");
 
   close(fd);
 
@@ -220,6 +253,7 @@ static void print_help(char *name)
   printf("Usage: %s [options]\n", name);
   printf("Options:\n");
   printf("  -h, --help                 print this help message and exit\n");
+  printf("  -b, --verbose              print verbose messages\n");
   printf("  -e, --erase                perform a chip erase before programming\n");
   printf("  -p, --program              program the chip\n");
   printf("  -v, --verify               verify memory\n");
@@ -229,7 +263,8 @@ static void print_help(char *name)
   printf("  -t, --target <name>        specify a target type (use '-t list' for a list of supported target types)\n");
   printf("  -l, --list                 list all available debuggers\n");
   printf("  -s, --serial <number>      use a debugger with a specified serial number\n");
-  printf("  -b, --verbose              print verbose messages\n");
+  printf("  -o, --offset <number>      offset for the operation\n");
+  printf("  -z, --size <number>        size for the operation\n");
   exit(0);
 }
 
@@ -244,16 +279,18 @@ static void parse_command_line(int argc, char **argv)
     switch (c)
     {
       case 'h': print_help(argv[0]); break;
-      case 'e': g_erase = true; break;
-      case 'p': g_program = true; break;
-      case 'v': g_verify = true; break;
-      case 'k': g_lock = true; break;
-      case 'r': g_read = true; break;
-      case 'f': g_file = optarg; break;
+      case 'e': g_target_options.erase = true; break;
+      case 'p': g_target_options.program = true; break;
+      case 'v': g_target_options.verify = true; break;
+      case 'k': g_target_options.lock = true; break;
+      case 'r': g_target_options.read = true; break;
+      case 'f': g_target_options.name = optarg; break;
       case 't': g_target = optarg; break;
       case 'l': g_list = true; break;
       case 's': g_serial = optarg; break;
       case 'b': g_verbose = true; break;
+      case 'o': g_target_options.offset = (uint32_t)strtoul(optarg, NULL, 0); break;
+      case 'z': g_target_options.size = (uint32_t)strtoul(optarg, NULL, 0); break;
       default: exit(1); break;
     }
   }
@@ -271,10 +308,12 @@ int main(int argc, char **argv)
 
   parse_command_line(argc, argv);
 
-  if (!(g_erase || g_program || g_verify || g_lock || g_read || g_list || g_target))
+  if (!(g_target_options.erase || g_target_options.program || g_target_options.verify ||
+      g_target_options.lock || g_target_options.read || g_list || g_target))
     error_exit("no actions specified");
 
-  if (g_read && (g_erase || g_program || g_verify || g_lock))
+  if (g_target_options.read && (g_target_options.erase || g_target_options.program ||
+      g_target_options.verify || g_target_options.lock))
     error_exit("mutually exclusive actions specified");
 
   n_debuggers = dbg_enumerate(debuggers, MAX_DEBUGGERS);
@@ -332,22 +371,42 @@ int main(int argc, char **argv)
   dap_swj_clock(DAP_FREQ);
   dap_target_prepare();
 
-  target->ops->select();
+  target->ops->select(&g_target_options);
 
-  if (g_erase)
+  if (g_target_options.erase)
+  {
+    verbose("Erasing... ");
     target->ops->erase();
+    verbose(" done.\n");
+  }
 
-  if (g_program)
-    target->ops->program(g_file);
+  if (g_target_options.program)
+  {
+    verbose("Programming...");
+    target->ops->program();
+    verbose(" done.\n");
+  }
 
-  if (g_verify)
-    target->ops->verify(g_file);
+  if (g_target_options.verify)
+  {
+    verbose("Verification...");
+    target->ops->verify();
+    verbose(" done.\n");
+  }
 
-  if (g_lock)
+  if (g_target_options.lock)
+  {
+    verbose("Locking... ");
     target->ops->lock();
+    verbose(" done.\n");
+  }
 
-  if (g_read)
-    target->ops->read(g_file);
+  if (g_target_options.read)
+  {
+    verbose("Reading...");
+    target->ops->read();
+    verbose(" done.\n");
+  }
 
   target->ops->deselect();
 
