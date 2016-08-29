@@ -60,7 +60,11 @@ configuration ActiveMessageC
 
 implementation
 {
+	#ifdef BOARD_REB233XPRO
 	components RF233ActiveMessageC as MessageC;
+	#elif defined(BOARD_ZIGBITRF212)
+	components RF212ActiveMessageC as MessageC;
+	#endif
 
 	SplitControl = MessageC;
 

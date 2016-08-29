@@ -72,12 +72,16 @@
 
 #ifdef BOARD_REB233XPRO 
 #include <RF233Radio.h>
- #endif
+#elif defined(BOARD_ZIGBITRF212)
+#include <RF212Radio.h>
+#endif
 #include <Serial.h>
 
 typedef union message_header {
 	#ifdef BOARD_REB233XPRO
 	rf233packet_header_t rf233;
+	#elif defined(BOARD_ZIGBITRF212)
+	rf212packet_header_t rf212;
 	#endif
 	serial_header_t serial;
 } message_header_t;
@@ -85,12 +89,16 @@ typedef union message_header {
 typedef union message_footer {
 	#ifdef BOARD_REB233XPRO
 	rf233packet_footer_t rf233;
+	#elif defined(BOARD_ZIGBITRF212)
+	rf212packet_footer_t rf212;
 	#endif
 } message_footer_t;
 
 typedef union message_metadata {
 	#ifdef BOARD_REB233XPRO
 	rf233packet_metadata_t rf233;
+	#elif defined(BOARD_ZIGBITRF212)
+	rf212packet_metadata_t rf212;
 	#endif
 } message_metadata_t;
 
