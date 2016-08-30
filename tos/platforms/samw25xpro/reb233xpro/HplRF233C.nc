@@ -63,7 +63,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /*
- * File modified for SamD21XplainedPro platform with REB233XPRO extension 
+ * File modified for SamW25XplainedPro platform with REB233XPRO extension 
  * module plugged on EXT1 header.
  *
  * @author Ugo Maria Colesanti
@@ -94,23 +94,23 @@ implementation
 	components HplRF233P;
 	IRQ = HplRF233P.IRQ;
 
-	components SamFastSpi0C as SpiC;
+	components SamFastSpi1C as SpiC;
 
 	SpiResource = SpiC;
 	FastSpiByte = SpiC;
 	HplRF233P.SpiConfig -> SpiC.SpiConfig ;
 
-	components new SamGpioIntC(PIN_PB4,PB4_EIC_LINE) as PortB4IntC;
+	components new SamGpioIntC(PIN_PA20,PA20_EIC_LINE) as PortA20IntC;
 	components SamGpioC as IO;
 
-	SLP_TR = IO.Port_PB5;
-	RSTN = IO.Port_PB2;
-	SELN = IO.Port_PA5;
+	SLP_TR = IO.Port_PA21;
+	RSTN = IO.Port_PA10;
+	SELN = IO.Port_PA17;
 
-	HplRF233P.PortIRQ -> IO.Port_PB4;
-	HplRF233P.IRQInt -> PortB4IntC ;
+	HplRF233P.PortIRQ -> IO.Port_PA20;
+	HplRF233P.IRQInt -> PortA20IntC ;
 
-	HplRF233P.PortCLKM -> IO.Port_PB7;
+	HplRF233P.PortCLKM -> IO.Port_PB3;
 	HplRF233P.LocalTime -> LocalTime31khzC ;
 
 

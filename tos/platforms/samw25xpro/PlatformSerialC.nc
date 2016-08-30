@@ -44,7 +44,7 @@ configuration PlatformSerialC
 
 implementation
 {
-	components SamUsart3C as UsartC;
+	components SamUsart4C as UsartC;
 	StdControl = UsartC;
 	UartStream = UsartC;
 	UartByte = UsartC;

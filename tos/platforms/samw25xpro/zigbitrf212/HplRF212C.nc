@@ -63,11 +63,11 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /*
- * File modified for SamD21XplainedPro platform with REB233XPRO extension 
+ * File modified for SamW25XplainedPro platform with Zigbit RF212 extension 
  * module plugged on EXT1 header.
  *
  * @author Ugo Maria Colesanti
- * @date   Jul 31, 2016
+ * @date   Aug 30, 2016
  */
 
 #include <RadioConfig.h>
@@ -94,23 +94,23 @@ implementation
 	components HplRF212P;
 	IRQ = HplRF212P.IRQ;
 
-	components SamFastSpi0C as SpiC;
+	components SamFastSpi1C as SpiC;
 
 	SpiResource = SpiC;
 	FastSpiByte = SpiC;
 	HplRF212P.SpiConfig -> SpiC.SpiConfig ;
 
-	components new SamGpioIntC(PIN_PB4,PB4_EIC_LINE) as PortB4IntC;
+	components new SamGpioIntC(PIN_PA20,PA20_EIC_LINE) as PortA20IntC;
 	components SamGpioC as IO;
 
-	SLP_TR = IO.Port_PB5;
-	RSTN = IO.Port_PB2;
-	SELN = IO.Port_PA5;
+	SLP_TR = IO.Port_PA21;
+	RSTN = IO.Port_PA10;
+	SELN = IO.Port_PA17;
 
-	HplRF212P.PortIRQ -> IO.Port_PB4;
-	HplRF212P.IRQInt -> PortB4IntC ;
+	HplRF212P.PortIRQ -> IO.Port_PA20;
+	HplRF212P.IRQInt -> PortA20IntC ;
 
-	HplRF212P.PortCLKM -> IO.Port_PB7;
+	HplRF212P.PortCLKM -> IO.Port_PB3;
 	HplRF212P.LocalTime -> LocalTime31khzC ;
 
 

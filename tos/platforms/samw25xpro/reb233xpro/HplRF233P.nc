@@ -63,7 +63,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /*
- * File modified for SamD21XplainedPro platform with REB233XPRO extension 
+ * File modified for SamW25XplainedPro platform with REB233XPRO extension 
  * module plugged on EXT1 header.
  *
  * @author Ugo Maria Colesanti
