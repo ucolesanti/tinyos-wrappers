@@ -39,6 +39,7 @@
 
 #include "samd21.h"
 #include "board.h"
+ #include "conf_winc.h"
 // From module: PORT - GPIO Pin Control
 #include <port.h>
 

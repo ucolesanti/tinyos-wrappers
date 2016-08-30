@@ -1,5 +1,10 @@
 PFLAGS += -I%T/platforms/samw25xpro
 PFLAGS += -I%T/platforms/samw25xpro/config
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay/sam0
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500
+#PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bsp/include
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/include
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/include
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/source
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/power/power_sam_d_r
@@ -10,9 +15,20 @@ PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/reset/reset_s
 CFLAGS+=-D__SAMD21G18A__
 CFLAGS+=-DBOARD=SAMW25_XPLAINED_PRO
 
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_samd21.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/spi_flash/source/spi_flash.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/nmdrv.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/nmasic.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/nmspi.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/nmbus.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/m2m_hif.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/common/source/nm_common.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/m2m_wifi.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bsp/source/nm_bsp_samd21.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tc/tc_sam_d_r/tc.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count_interrupt.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/extint/extint_sam_d_r/extint.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay/sam0/systick_counter.c
