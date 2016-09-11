@@ -62,6 +62,8 @@ implementation{
 		
 			// set the clock generator
 			config_usart.generator_source = gen ;
+			config_usart.run_in_standby = TRUE ;
+
 
 			// current usart configuration
 			config_usart.baudrate    = speed;
@@ -208,7 +210,7 @@ implementation{
 	   * @return SUCCESS if request was accepted, FAIL otherwise.
 	   */
 	  async command error_t UartStream.receive( uint8_t* buf, uint16_t len ){
-		  uint8_t result;
+		  int result;
 		  result = usart_read_buffer_job(&device_instance,buf,len) ;
 		  switch(result){
 			  case STATUS_BUSY:
