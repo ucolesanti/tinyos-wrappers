@@ -178,23 +178,14 @@ implementation{
 	  }
 
 	  /**
-	   * Signal completion of sending a stream.
-	   *
-	   * @param 'uint8_t* COUNT(len) buf' Bytes sent.
-	   * @param len Number of bytes sent.
-	   * @param error SUCCESS if the transmission was successful, FAIL otherwise.
-	   */
-//	  async event void sendDone( uint8_t* buf, uint16_t len, error_t error );
-
-	  /**
 	   * Enable the receive byte interrupt. The <code>receive</code> event
 	   * is signalled each time a byte is received.
 	   *
 	   * @return SUCCESS if interrupt was enabled, FAIL otherwise.
 	   */
 	  async command error_t UartStream.enableReceiveInterrupt(){
-		  //void usart_enable_callback(&device_instance,USART_CALLBACK_BUFFER_RECEIVED);
-		  return FAIL;
+	  	// UartStream is already implemented in interrupt mode
+		return FAIL;
 	  }
 
 	  /**
@@ -203,16 +194,9 @@ implementation{
 	   * @return SUCCESS if interrupt was disabled, FAIL otherwise.
 	   */
 	  async command error_t UartStream.disableReceiveInterrupt(){
-//		  void usart_disable_callback(&device_instance,USART_CALLBACK_BUFFER_RECEIVED);
-		  return FAIL;
+	  	// UartStream is already implemented in interrupt mode
+		return FAIL;
 	  }
-
-	  /**
-	   * Signals the receipt of a byte.
-	   *
-	   * @param byte The byte received.
-	   */
-//	  async event void UartStream.receivedByte( uint8_t byte );
 
 	  /**
 	   * Begin reception of a UART stream. If SUCCESS is returned,
