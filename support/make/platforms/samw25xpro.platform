@@ -1,20 +1,41 @@
 PFLAGS += -I%T/platforms/samw25xpro
 PFLAGS += -I%T/platforms/samw25xpro/config
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper/usb
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay/sam0
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/sleepmgr
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/sleepmgr/samd
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/iot/
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/iot/http
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/socket/include
 #PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bsp/include
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/include
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/include
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/samd21/source
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tcc
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/power/power_sam_d_r
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da
 PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/interrupt/system_interrupt_samd21
-PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/reset/reset_sam_d_r			
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/reset/reset_sam_d_r	
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb	
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/		
 
 CFLAGS+=-D__SAMD21G18A__
 CFLAGS+=-DBOARD=SAMW25_XPLAINED_PRO
+CFLAGS+=-DTCC_ASYNC=true
+CFLAGS+=-DUDD_NO_SLEEP_MGR
 
+
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/iot/sw_timer.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/iot/stream_writer.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/http_downloader_example/iot/http/http_client.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/socket/source/socket.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_samd21.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/spi_flash/source/spi_flash.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/nmdrv.c
@@ -25,10 +46,19 @@ TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xd
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/common/source/nm_common.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/driver/source/m2m_wifi.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/components/wifi/winc1500/bsp/source/nm_bsp_samd21.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/samm0p/wrapper/usb/dummy_usb.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc_desc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc/udc.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tc/tc_sam_d_r/tc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tcc/tcc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tcc/tcc_callback.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count_interrupt.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/extint/extint_sam_d_r/extint.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
 #TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common2/services/delay/sam0/systick_counter.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_device_udd.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_dual.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/usb_sam_d_r/usb.c

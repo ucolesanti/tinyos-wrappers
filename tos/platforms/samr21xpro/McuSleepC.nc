@@ -63,6 +63,9 @@ implementation{
   NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
 #endif
   switch(powerState){
+    case SAMM0_PWR_IDLE0:
+        system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+     break;
      case SAMM0_PWR_IDLE2:
         system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
      break;
@@ -70,7 +73,7 @@ implementation{
        system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
      break;
      default:
-       system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
+       system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
      break;
         
    }

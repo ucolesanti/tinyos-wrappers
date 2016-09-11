@@ -53,8 +53,9 @@
 #include "cortexm0hardware.h"
 
 enum{
-	SAMM0_PWR_IDLE2 = 0,
-	SAMM0_PWR_STDBY = 1,
+	SAMM0_PWR_IDLE0 = 0,
+	SAMM0_PWR_IDLE2 = 1,
+	SAMM0_PWR_STDBY = 2,
 };
 
 typedef uint8_t mcu_power_t @combine("mcombine");

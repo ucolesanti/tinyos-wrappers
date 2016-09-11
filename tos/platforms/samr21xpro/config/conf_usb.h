@@ -98,7 +98,9 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)	/*main_usb_detected(b_vbus_high)*/
+#define  USB_DEVICE_ATTACH_AUTO_DISABLE	  /* disable udd_attach during startup, wait for some event first */ 	
+#define  CONF_BOARD_USB_VBUS_DETECT		  /* enables Vbus event detection */
+#define  UDC_VBUS_EVENT(b_vbus_high)	  main_usb_detected(b_vbus_high)
 #define  UDC_SOF_EVENT()                  main_sof_action()
 #define  UDC_SUSPEND_EVENT()              main_suspend_action()
 #define  UDC_RESUME_EVENT()               main_resume_action()

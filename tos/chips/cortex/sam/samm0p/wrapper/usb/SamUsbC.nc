@@ -47,10 +47,15 @@ implementation{
 	components SamUsbP, MainC;
 	components new TimerMilliC() as TimerC;
 	components LedsC as LedsCompC;
+	components McuSleepC;
+
 	StdControl = SamUsbP;
 	UartByte = SamUsbP;
 	UartStream = SamUsbP;
 	MainC.SoftwareInit -> SamUsbP;
 	SamUsbP.TimeoutTimer -> TimerC;
 	SamUsbP.Leds -> LedsCompC;
+
+	McuSleepC.McuPowerOverride -> SamUsbP;
+	SamUsbP.McuPowerState -> McuSleepC;
 }

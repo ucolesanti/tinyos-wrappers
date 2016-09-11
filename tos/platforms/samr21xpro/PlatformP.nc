@@ -85,7 +85,4 @@ implementation
 
 default command error_t LedsInit.init() { return SUCCESS; }
 
- 
-
-  
 }

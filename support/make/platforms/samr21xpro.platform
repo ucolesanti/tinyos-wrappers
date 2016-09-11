@@ -27,18 +27,18 @@ CFLAGS+=-D__SAMR21G18A__
 CFLAGS+=-DBOARD=SAMR21_XPLAINED_PRO
 CFLAGS+=-DUDD_NO_SLEEP_MGR
 
-
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc.c
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc_desc.c
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc/udc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/samm0p/wrapper/usb/dummy_usb.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc_desc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc/udc.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tc/tc_sam_d_r/tc.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count_interrupt.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_d_r/rtc_count.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/extint/extint_sam_d_r/extint.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
 TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_device_udd.c
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_dual.c
-#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/usb_sam_d_r/usb.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_device_udd.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_dual.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/usb_sam_d_r/usb.c
 
 

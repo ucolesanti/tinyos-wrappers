@@ -48,7 +48,7 @@ module McuSleepC
 
 }
 implementation{
-norace int8_t powerState = -1;
+  norace int8_t powerState = -1;
 
   async command void McuSleep.sleep()
   {
@@ -63,6 +63,9 @@ norace int8_t powerState = -1;
   NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
 #endif
   switch(powerState){
+    case SAMM0_PWR_IDLE0:
+        system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+     break;
      case SAMM0_PWR_IDLE2:
         system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
      break;
@@ -70,7 +73,7 @@ norace int8_t powerState = -1;
        system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
      break;
      default:
-       system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
+       system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
      break;
         
    }

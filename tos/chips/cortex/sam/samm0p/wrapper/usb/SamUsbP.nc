@@ -46,8 +46,13 @@ module SamUsbP{
 	provides interface UartStream ;
 	uses interface Timer<TMilli> as TimeoutTimer;
 	uses interface Leds;
+
+	// power management
+	provides interface McuPowerOverride;
+	uses interface McuPowerState;
 }
 implementation{
+	bool vbus_det = FALSE;
 	bool cdc_on = FALSE;
 	bool dtr_on = FALSE;
 
@@ -55,36 +60,43 @@ implementation{
 	uint8_t* rx_bfr_ptr = NULL ;
 	uint16_t tx_length = 0;
 	uint16_t rx_length = 0;
+	uint16_t rx_remaining = 0;
 
 	enum{
-		NO_BUS_DETECTED_TIMEOUT = 10240U,
+		ENUMERATION_TIMEOUT = 10240U,
 	};
 
 	command error_t Init.init(){
-		// Start USB stack to authorize VBus monitoring
+		// Start USB stack with VBus monitoring (but wait vbus before calling udc_attach)
 		udc_start();
-		udc_include_vbus_monitoring();
+
+		#if !defined(CONF_BOARD_USB_VBUS_DETECT)
+			// If VBus monitoring is not available, attach it and start enumeration timeout
+			atomic vbus_det = TRUE;
+			call Leds.led0On();
+			udc_attach();
+			call TimeoutTimer.startOneShot(ENUMERATION_TIMEOUT);
+			call McuPowerState.update();
+		#endif
+
 		return SUCCESS;
 	}
 
 	command error_t UsbControl.start(){
-		
-		// let the USB handle the power state of itself
-		//call TimeoutTimer.startOneShot(NO_BUS_DETECTED_TIMEOUT);
+		// Auto power management
 		return SUCCESS;
 	}
 
 	command error_t UsbControl.stop(){
-		// let the USB handle the power state of itself
+		// Auto power management
 		return SUCCESS;
 	}
 
 	event void TimeoutTimer.fired(){
-		// if(!cdc_on){
-		// 	// the device is powered but with USB inactive. Disable the peripheral
-		// 	udc_stop();
-		// 	call Leds.led0Off();
-		// }
+		atomic vbus_det = FALSE;
+		call Leds.led0Off();
+		udc_detach();
+		call McuPowerState.update();
 	}
 
 	/**
@@ -145,12 +157,12 @@ implementation{
 				}
 			}
 			remaining = udi_cdc_write_buf(buf,len) ;
-			if(remaining == len){
+			if(remaining > 0){
 				return FAIL;
 			}
 			else{
 				tx_bfr_ptr = buf ;
-				tx_length = remaining ;
+				tx_length = len ;
 				return SUCCESS;
 			} 
 			
@@ -177,8 +189,19 @@ implementation{
 	   * @return SUCCESS if request was accepted, FAIL otherwise.
 	   */
 	  async command error_t UartStream.receive( uint8_t* buf, uint16_t len ){
-		  
-		  return FAIL; // TODO: not implemented yet
+		atomic{
+			if(!cdc_on || ! dtr_on){
+				return EOFF;
+			}
+		}
+		if(rx_bfr_ptr != NULL){
+			return EBUSY;
+		}
+
+		rx_bfr_ptr = buf ;
+		rx_length = len ;
+		rx_remaining = len;
+		return SUCCESS;
 	  }
 
 
@@ -207,10 +230,21 @@ implementation{
 	void main_usb_detected(asf_bool_t detected) @C() @spontaneous()
 	{
 		if(detected){
+			udc_attach();
 			call Leds.led0On();
+			atomic vbus_det = TRUE; 
+			call TimeoutTimer.startOneShot(ENUMERATION_TIMEOUT); // still need to check for cdc, but for 10s keep peripheral enabled.
 		}
-		else call Leds.led0Off();
-		
+		else{
+			udc_detach();
+			call Leds.led0Off();
+			atomic{
+				vbus_det = FALSE;
+				cdc_on = FALSE;
+			} 
+
+		} 
+		call McuPowerState.update();
 	}
 
 #ifdef USB_DEVICE_LPM_SUPPORT
@@ -247,9 +281,11 @@ implementation{
 	{
 		if(b_enable){
 			atomic dtr_on = TRUE;
+			call McuPowerState.update();
 		}
 		else{
 			atomic dtr_on = FALSE;
+			call McuPowerState.update();
 		}
 	}
 
@@ -263,9 +299,22 @@ void uart_tx_notify(uint8_t port) @C() @spontaneous()
 }
 
 // called to notify the MCU that a character was received over the USB
-	void uart_rx_notify(uint8_t port) @C() @spontaneous() 
+void uart_rx_notify(uint8_t port) @C() @spontaneous() 
 {
-	// do nothing for now, check only transmition, not reception.
+	
+	if(rx_bfr_ptr != NULL && rx_length > 0){
+		uint16_t bread = udi_cdc_read_no_polling(&rx_bfr_ptr[rx_length-rx_remaining],rx_remaining);
+		if(bread >= rx_remaining){
+			signal UartStream.receiveDone( rx_bfr_ptr, rx_length, SUCCESS);
+			rx_bfr_ptr = NULL;
+			rx_length = 0;
+			rx_remaining = 0;
+		}
+		else{
+			rx_remaining -= bread;
+		}
+	}
+	// else ignore
 }
 
 void uart_config(uint8_t port,usb_cdc_line_coding_t *cfg) @C() @spontaneous() 
@@ -283,6 +332,16 @@ void uart_close(uint8_t port) @C() @spontaneous()
 	// do nothing
 }
 
+
+	// Power management
+	async command mcu_power_t McuPowerOverride.lowestState()
+	{
+		if(vbus_det || cdc_on){
+			return SAMM0_PWR_IDLE0;
+		}
+		else return SAMM0_PWR_STDBY;
+
+	}
 
 
 }

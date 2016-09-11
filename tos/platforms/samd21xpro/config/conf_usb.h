@@ -50,22 +50,19 @@
 #include "compiler.h"
 #include "board.h"
 
+#define UDD_CLOCK_GEN      GCLK_GENERATOR_4
+#define UDD_CLOCK_SOURCE   SYSTEM_CLOCK_SOURCE_DFLL
+
 /**
  * USB Device Configuration
  * @{
  */
 
-#define UDD_CLOCK_GEN      GCLK_GENERATOR_4
-#define UDD_CLOCK_SOURCE   SYSTEM_CLOCK_SOURCE_DFLL
-
 //! Device definition (mandatory)
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
 #if BOARD == UC3B_BOARD_CONTROLLER
- 	#warning "UC3 Board #########################################################################"
 # define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_UC3_CDC_DEBUG
-
 #else
- 	#warning "ASF Board #########################################################################"
 # define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_CDC
 #endif
 #define  USB_DEVICE_MAJOR_VERSION         1
@@ -79,13 +76,8 @@
 
 //! USB Device string definitions (Optional)
 #define  USB_DEVICE_MANUFACTURE_NAME      "ATMEL ASF"
-
-// CDC
 #define  USB_DEVICE_PRODUCT_NAME          "CDC Virtual Com"
-
-// MSC
-//#define  USB_DEVICE_PRODUCT_NAME          "MSC"
-//#define  USB_DEVICE_SERIAL_NAME           "123123123123"
+// #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 
 /**
@@ -106,7 +98,9 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)
+#define  USB_DEVICE_ATTACH_AUTO_DISABLE	  /* disable udd_attach during startup, wait for some event first */ 	
+#define  CONF_BOARD_USB_VBUS_DETECT		  /* enables Vbus event detection */
+#define  UDC_VBUS_EVENT(b_vbus_high)	  main_usb_detected(b_vbus_high)
 #define  UDC_SOF_EVENT()                  main_sof_action()
 #define  UDC_SUSPEND_EVENT()              main_suspend_action()
 #define  UDC_RESUME_EVENT()               main_resume_action()
@@ -141,17 +135,17 @@
 #define  UDI_CDC_PORT_NB 1
 
 //! Interface callback definition
- #define  UDI_CDC_ENABLE_EXT(port)         main_cdc_enable(port)
- #define  UDI_CDC_DISABLE_EXT(port)        main_cdc_disable(port)
- #define  UDI_CDC_RX_NOTIFY(port)          uart_rx_notify(port)
- #define  UDI_CDC_TX_EMPTY_NOTIFY(port)		uart_tx_notify(port)
- #define  UDI_CDC_SET_CODING_EXT(port,cfg) uart_config(port,cfg)
- #define  UDI_CDC_SET_DTR_EXT(port,set)    main_cdc_set_dtr(port,set)
- #define  UDI_CDC_SET_RTS_EXT(port,set)
+#define  UDI_CDC_ENABLE_EXT(port)         main_cdc_enable(port)
+#define  UDI_CDC_DISABLE_EXT(port)        main_cdc_disable(port)
+#define  UDI_CDC_RX_NOTIFY(port)          uart_rx_notify(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)		uart_tx_notify(port)
+#define  UDI_CDC_SET_CODING_EXT(port,cfg) uart_config(port,cfg)
+#define  UDI_CDC_SET_DTR_EXT(port,set)    main_cdc_set_dtr(port,set)
+#define  UDI_CDC_SET_RTS_EXT(port,set)
 
 //! Define it when the transfer CDC Device to Host is a low rate (<512000 bauds)
 //! to reduce CDC buffers size
-////#define  UDI_CDC_LOW_RATE
+//#define  UDI_CDC_LOW_RATE
 
 //! Default configuration of communication port
 #if BOARD == UC3B_BOARD_CONTROLLER
@@ -167,30 +161,12 @@
 
 
 /**
- * Configuration of MSC interface
- * @{
- */
-
-//! Vendor name and Product version of MSC interface
-//#define UDI_MSC_GLOBAL_VENDOR_ID            \
-//   'A', 'T', 'M', 'E', 'L', ' ', ' ', ' '
-//#define UDI_MSC_GLOBAL_PRODUCT_VERSION            \
-//   '1', '.', '0', '0'
-
-//! Interface callback definition
-//#define  UDI_MSC_ENABLE_EXT()          signal HplUdiMsc.udiMscEnableExt()
-//#define  UDI_MSC_DISABLE_EXT()         signal HplUdiMsc.udiMscDisableExt()
-//@}
-
-/**
  * USB Device Driver Configuration
  * @{
  */
 //@}
 
 //! The includes of classes and other headers must be done at the end of this file to avoid compile error
-//#include "udi_msc_conf.h"
 #include "udi_cdc_conf.h"
 #include "usb_wrapper.h"
-
 #endif // _CONF_USB_H_
