@@ -536,7 +536,13 @@ implementation
 		// do something useful, just to wait a little
 		time32 = call LocalTime.get();
 		timesync = call PacketTimeSyncOffset.isSet(msg) ? ((void*)msg) + call PacketTimeSyncOffset.get(msg) : 0;
-
+		// if( call DiagMsg.record() )
+		// {
+		// 	call DiagMsg.str("tsync");
+		// 	call DiagMsg.uint8(FAIL);
+		// 	call DiagMsg.uint8(SUCCESS);
+		// 	call DiagMsg.send();
+		// }
 		// we have missed an incoming message in this short amount of time
 		if( (readRegister(RF233_TRX_STATUS) & RF233_TRX_STATUS_MASK) != RF233_PLL_ON )
 		{
@@ -639,8 +645,8 @@ implementation
 			length = getHeader(msg)->length;
 
 			call DiagMsg.chr('t');
-			call DiagMsg.uint32(call PacketTimeStamp.isValid(rxMsg) ? call PacketTimeStamp.timestamp(rxMsg) : 0);
-			call DiagMsg.uint16(call RadioAlarm.getNow());
+			call DiagMsg.uint32(call PacketTimeStamp.isValid(msg) ? call PacketTimeStamp.timestamp(msg) : 0);
+      		call DiagMsg.uint16(call RadioAlarm.getNow());
 			call DiagMsg.int8(length);
 			call DiagMsg.hex8s(getPayload(msg), length - 2);
 			call DiagMsg.send();
@@ -1112,7 +1118,13 @@ implementation
 	{
 		// we do not store the value, the time sync field is always the last 4 bytes
 		RADIO_ASSERT( call PacketTimeSyncOffset.get(msg) == value );
-
+		// if( call DiagMsg.record() )
+		// {
+		// 	call DiagMsg.str("tsoff");
+		// 	call DiagMsg.uint8(value);
+		// 	call DiagMsg.uint8(call PacketTimeSyncOffset.get(msg));
+		// 	call DiagMsg.send();
+		// }
 		call TimeSyncFlag.set(msg);
 	}
 
