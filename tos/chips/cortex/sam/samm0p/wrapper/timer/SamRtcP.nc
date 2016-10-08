@@ -59,7 +59,7 @@ implementation{
 			config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_32;
 			config_rtc_count.mode                = RTC_COUNT_MODE_32BIT;
 
-			config_rtc_count.continuously_update = false;
+			//config_rtc_count.continuously_update = false;
 
 		rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
 		rtc_count_enable(&rtc_instance);

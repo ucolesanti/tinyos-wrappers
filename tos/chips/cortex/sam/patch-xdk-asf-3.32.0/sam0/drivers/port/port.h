@@ -692,10 +692,12 @@ static inline enum status_code port_input_event_set_config(
 		const enum port_input_event n,
 		struct port_input_event_config *const config)
 {
-	Assert(config);
 	PortGroup *const port_base = port_get_group_from_gpio_pin(config->gpio_pin);
 	uint8_t pin_index = config->gpio_pin % 32;
 	struct port_config pin_conf;
+
+	Assert(config);
+	
 
 	port_get_config_defaults(&pin_conf);
 	/* Configure the GPIO pin as outputs*/

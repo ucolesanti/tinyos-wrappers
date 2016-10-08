@@ -1,0 +1,36 @@
+PFLAGS += -I%T/platforms/saml21xpro
+PFLAGS += -I%T/platforms/saml21xpro/config
+PFLAGS += -I%T/chips/cortex/sam/samm0p/wrapper/usb
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/sleepmgr
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/sleepmgr/samd
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/saml21/include
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/utils/cmsis/saml21/source
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/power/power_sam_l
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_saml21
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/interrupt/system_interrupt_saml21
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/reset/reset_sam_l
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb	
+PFLAGS += -I%T/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/			
+
+CFLAGS+=-D__SAML21J18A__
+CFLAGS+=-DBOARD=SAML21_XPLAINED_PRO
+#CFLAGS+=-DUDD_NO_SLEEP_MGR
+
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/samm0p/wrapper/usb/dummy_usb.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/class/cdc/device/udi_cdc_desc.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/common/services/usb/udc/udc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/tc/tc_sam_l_c/tc.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_l_c/rtc_count_interrupt.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/rtc/rtc_sam_l_c/rtc_count.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/extint/extint_sam_l_c/extint.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_saml21/gclk.c
+TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/system/clock/clock_saml21/clock.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_device_udd.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/stack_interface/usb_dual.c
+#TOSMAKE_ADDITIONAL_INPUTS+=$(TINYOS_ROOT_DIR_ADDITIONAL)/tos/chips/cortex/sam/xdk-asf-3.32.0/sam0/drivers/usb/usb_sam_d_r/usb.c
+

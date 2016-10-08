@@ -1588,6 +1588,9 @@ static inline uint32_t tc_get_status(
 {
 	uint32_t int_flags;
 	uint32_t status_flags;
+#ifdef FEATURE_TC_DOUBLE_BUFFERED
+	uint8_t double_buffer_valid_status;
+#endif
 
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
@@ -1627,7 +1630,7 @@ static inline uint32_t tc_get_status(
 		status_flags |= TC_STATUS_COUNT_OVERFLOW;
 	}
 #ifdef FEATURE_TC_DOUBLE_BUFFERED
-	uint8_t double_buffer_valid_status = tc_module->STATUS.reg;
+	double_buffer_valid_status = tc_module->STATUS.reg;
 
 	/* Check channel 0 compare or capture buffer valid */
 	if (double_buffer_valid_status & TC_STATUS_CCBUFV0) {
